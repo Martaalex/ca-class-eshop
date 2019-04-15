@@ -1,9 +1,13 @@
 <template>
-	<h1>Welcome</h1>
+	<h1> Product {{ $route.params.id }}</h1>
 </template>
 
 <script>
 export default {
-	name: 'WelcomeView'
+
 }
 </script>
+
+<style>
+
+</style>
