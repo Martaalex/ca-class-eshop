@@ -1,11 +1,7 @@
+import Products from './modules/Products'
+
 export default {
-	state: {
-
-	},
-	mutations: {
-
-	},
-	actions: {
-
+	modules: {
+		Products
 	}
 }

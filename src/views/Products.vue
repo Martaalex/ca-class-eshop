@@ -25,9 +25,11 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { createNamespacedHelpers } from 'vuex'
 import ProductBox from '@/components/ProductBox'
 import Spinner from '@/components/Spinner'
+const { mapActions, mapGetters } = createNamespacedHelpers('Products')
+
 export default {
 	name: 'ProductsView',
 	components: {
@@ -35,14 +37,27 @@ export default {
 		Spinner
 	},
 	data: () => ({
-		isRequesting: false,
-		products: []
+		isRequesting: false
 	}),
+	computed: {
+		...mapGetters({
+			products: 'products'
+		})
+	},
 	async created () {
 		this.isRequesting = true
-		const { data } = await axios.get('https://boiling-reaches-93648.herokuapp.com/food-shop/products')
-		this.products = data
-		this.isRequesting = false
+		try {
+			await this.fetchData()
+			this.isRequesting = false
+		} catch (error) {
+			console.error(error)
+			this.isRequesting = false
+		}
+	},
+	methods: {
+		...mapActions({
+			fetchData: 'fetchData'
+		})
 	}
 }
 </script>
