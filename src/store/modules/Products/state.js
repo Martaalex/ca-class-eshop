@@ -1,3 +1,5 @@
 export default () => ({
-	products: []
+	status: null,
+	products: [],
+	favorites: JSON.parse(localStorage.getItem('favorites')) || []
 })

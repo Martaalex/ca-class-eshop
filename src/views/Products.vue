@@ -17,7 +17,9 @@
 			>
 				<ProductBox
 					:product="product"
-					@click="$router.push({ name: 'Product', params: { id: product.id } })"
+					:liked="favorites.includes(product.id)"
+					@like="updateFavorite"
+					@click="goToProduct(product.id)"
 				/>
 			</div>
 		</div>
@@ -26,9 +28,14 @@
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
+import { REQUESTING } from '@/store/modules/Products/status-types'
+import { FETCH_DATA } from '@/store/modules/Products/action-types'
+import { UPDATE_FAVORITE } from '@/store/modules/Products/mutation-types'
+
 import ProductBox from '@/components/ProductBox'
 import Spinner from '@/components/Spinner'
-const { mapActions, mapGetters } = createNamespacedHelpers('Products')
+
+const { mapActions, mapMutations, mapGetters } = createNamespacedHelpers('Products')
 
 export default {
 	name: 'ProductsView',
@@ -36,28 +43,33 @@ export default {
 		ProductBox,
 		Spinner
 	},
-	data: () => ({
-		isRequesting: false
-	}),
 	computed: {
 		...mapGetters({
-			products: 'products'
-		})
+			status: 'status',
+			products: 'products',
+			favorites: 'favorites'
+		}),
+		isRequesting () {
+			return this.status === REQUESTING
+		}
 	},
 	async created () {
-		this.isRequesting = true
-		try {
-			await this.fetchData()
-			this.isRequesting = false
-		} catch (error) {
-			console.error(error)
-			this.isRequesting = false
-		}
+		await this.fetchData()
 	},
 	methods: {
 		...mapActions({
-			fetchData: 'fetchData'
-		})
+			fetchData: FETCH_DATA
+		}),
+		...mapMutations({
+			updateFavorite: UPDATE_FAVORITE
+		}),
+
+		goToProduct (id) {
+			this.$router.push({
+				name: 'Product',
+				params: { id }
+			})
+		}
 	}
 }
 </script>

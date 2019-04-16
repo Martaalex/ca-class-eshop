@@ -8,6 +8,7 @@
 				leave-active-class="route-transition--exiting"
 				leave-to-class="route-transition--exit-end"
 				mode="out-in"
+				@after-enter="$store.dispatch('APP_TRANSITION_END')"
 			>
 				<RouterView />
 			</Transition>

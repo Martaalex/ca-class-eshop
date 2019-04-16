@@ -5,7 +5,7 @@ import { createRouter } from '@/packages/vue-router'
 
 export function createApp () {
 	const store = createStore()
-	const router = createRouter()
+	const router = createRouter(store)
 	const app = new Vue({
 		store,
 		router,

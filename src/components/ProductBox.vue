@@ -2,12 +2,14 @@
 	<div class="product-box">
 		<div class="product-box__favorite">
 			<HeartIcon
-				:active="isFavorite"
-				@click="setFavorite"
+				:active="liked"
+				@click="$emit('like', product.id)"
 			/>
 		</div>
 		<div
-			:class="['product-box__image', { 'product-box__image--loading': !isLoaded }]"
+			:class="['product-box__image', {
+				'product-box__image--loading': !isLoaded
+			}]"
 			@click="$emit('click', $event)"
 		>
 			<img
@@ -65,32 +67,32 @@ export default {
 	props: {
 		product: {
 			type: Object,
-			required: true,
-			default: () => ({})
+			required: true
+		},
+		liked: {
+			type: Boolean,
+			default: false
 		}
 	},
 	data: () => ({
-		isLoaded: false,
-		isFavorite: false
+		isLoaded: false
 	}),
 	computed: {
 		image () {
-			return `${this.product.image}?c=${this._uid}`
+			return `${this.product.image}?c=${this.product.id}`
 		}
 	},
-	created () {
-		this.loadImage()
+	async created () {
+		await this.loadImage(this.image)
+		this.isLoaded = true
 	},
 	methods: {
-		loadImage () {
-			const img = new Image()
-			img.src = this.image
-			img.onload = () => {
-				this.isLoaded = true
-			}
-		},
-		setFavorite () {
-			this.isFavorite = !this.isFavorite
+		loadImage (src) {
+			return new Promise(resolve => {
+				const img = new Image()
+				img.src = src
+				img.onload = resolve
+			})
 		}
 	}
 }
