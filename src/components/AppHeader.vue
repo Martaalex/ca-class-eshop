@@ -40,5 +40,11 @@ export default {
 			align-items: center;
 			justify-content: space-between;
 		}
+
+		&__logo {
+			h3 {
+				cursor: pointer;
+			}
+		}
 	}
 </style>
