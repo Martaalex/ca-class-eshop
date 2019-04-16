@@ -62,7 +62,6 @@ export default {
 			display: flex;
 			flex-wrap: wrap;
 			margin: 0 -15px;
-			justify-content: space-between;
 		}
 
 		&__product {
