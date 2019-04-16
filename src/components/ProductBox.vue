@@ -102,7 +102,7 @@ export default {
 		box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
 		border-radius: 5px;
 		overflow: hidden;
-		animation: ProductFadeIn .2s cubic-bezier(0.4, 0.0, 0.2, 1);;
+		animation: ProductFadeIn .2s cubic-bezier(0.4, 0.0, 0.2, 1);
 
 		&__favorite {
 			z-index: 1;
