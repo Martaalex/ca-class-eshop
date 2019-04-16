@@ -167,6 +167,9 @@ export default {
 			line-height: 1;
 			font-weight: normal;
 			margin: 0;
+			height: 45px;
+			line-height: 1.1;
+			overflow: hidden;
 		}
 
 		&__button {
