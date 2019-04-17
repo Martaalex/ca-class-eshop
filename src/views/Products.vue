@@ -17,8 +17,8 @@
 			>
 				<ProductBox
 					:product="product"
-					:liked="favorites.includes(product.id)"
-					@like="updateFavorite"
+					@favorite="updateFavorite"
+					@addToCart="addToCart"
 					@click="goToProduct(product.id)"
 				/>
 			</div>
@@ -31,11 +31,13 @@ import { createNamespacedHelpers } from 'vuex'
 import { REQUESTING } from '@/store/modules/Products/status-types'
 import { FETCH_DATA } from '@/store/modules/Products/action-types'
 import { UPDATE_FAVORITE } from '@/store/modules/Products/mutation-types'
+import { ADD_TO_CART } from '@/store/modules/Cart/action-types'
 
 import ProductBox from '@/components/ProductBox'
 import Spinner from '@/components/Spinner'
 
-const { mapActions, mapMutations, mapGetters } = createNamespacedHelpers('Products')
+const Products = createNamespacedHelpers('Products')
+const Cart = createNamespacedHelpers('Cart')
 
 export default {
 	name: 'ProductsView',
@@ -44,10 +46,9 @@ export default {
 		Spinner
 	},
 	computed: {
-		...mapGetters({
+		...Products.mapGetters({
 			status: 'status',
-			products: 'products',
-			favorites: 'favorites'
+			products: 'products'
 		}),
 		isRequesting () {
 			return this.status === REQUESTING
@@ -57,10 +58,13 @@ export default {
 		await this.fetchData()
 	},
 	methods: {
-		...mapActions({
+		...Cart.mapActions({
+			addToCart: ADD_TO_CART
+		}),
+		...Products.mapActions({
 			fetchData: FETCH_DATA
 		}),
-		...mapMutations({
+		...Products.mapMutations({
 			updateFavorite: UPDATE_FAVORITE
 		}),
 

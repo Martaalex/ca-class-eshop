@@ -12,11 +12,11 @@ export default {
 		})
 	},
 
-	[UPDATE_FAVORITE] (state, id) {
-		if (!state.favorites.includes(id)) {
-			state.favorites.push(id)
+	[UPDATE_FAVORITE] (state, product) {
+		if (!state.favorites.includes(product.id)) {
+			state.favorites.push(product.id)
 		} else {
-			state.favorites = state.favorites.filter(favorite => favorite !== id)
+			state.favorites = state.favorites.filter(favorite => favorite !== product.id)
 		}
 		localStorage.setItem('favorites', JSON.stringify(state.favorites))
 	}

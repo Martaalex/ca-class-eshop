@@ -7,7 +7,10 @@
 				</h3>
 			</div>
 			<div class="app-header__icons">
-				<CartIcon @click="$router.push({ name: 'Cart' })" />
+				<CartIcon
+					:badge="totalQuantity"
+					@click="$router.push({ name: 'Cart' })"
+				/>
 			</div>
 		</header>
 	</div>
@@ -15,10 +18,18 @@
 
 <script>
 import CartIcon from '@/components/CartIcon'
+import { createNamespacedHelpers } from 'vuex'
+const Cart = createNamespacedHelpers('Cart')
+
 export default {
 	name: 'AppHeader',
 	components: {
 		CartIcon
+	},
+	computed: {
+		...Cart.mapGetters({
+			totalQuantity: 'totalQuantity'
+		})
 	}
 }
 </script>
