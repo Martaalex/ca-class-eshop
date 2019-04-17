@@ -1,0 +1,2 @@
+export const UPDATE_STATUS = 'UPDATE_STATUS'
+export const ADD_PRODUCT = 'ADD_PRODUCT'

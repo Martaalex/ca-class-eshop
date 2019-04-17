@@ -2,8 +2,8 @@
 	<div class="product-box">
 		<div class="product-box__favorite">
 			<HeartIcon
-				:active="liked"
-				@click="$emit('like', product.id)"
+				:active="product.isFavored"
+				@click="$emit('favorite', product)"
 			/>
 		</div>
 		<div
@@ -35,7 +35,7 @@
 			</h2>
 		</div>
 		<div class="product-box__button">
-			<BaseButton>
+			<BaseButton @click="$emit('addToCart', product)">
 				<FontAwesomeIcon
 					class="product-box__button-icon"
 					:icon="['fas', 'cart-plus']"
@@ -68,10 +68,6 @@ export default {
 		product: {
 			type: Object,
 			required: true
-		},
-		liked: {
-			type: Boolean,
-			default: false
 		}
 	},
 	data: () => ({
