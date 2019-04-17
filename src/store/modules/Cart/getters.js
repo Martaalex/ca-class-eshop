@@ -15,8 +15,8 @@ export default {
 		const productsPrices = state.products
 			.map(product => parseFloat(product.price) * state.quantity[product.id])
 
-		if (productsPrices.length) {
-			return state.productsPrices.reduce((a, b) => a + b)
+		if (productsPrices.length > 0) {
+			return productsPrices.reduce((a, b) => a + b)
 		}
 
 		return 0
