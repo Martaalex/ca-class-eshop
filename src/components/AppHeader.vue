@@ -19,7 +19,7 @@
 <script>
 import CartIcon from '@/components/CartIcon'
 import { createNamespacedHelpers } from 'vuex'
-const Cart = createNamespacedHelpers('Cart')
+const { mapGetters } = createNamespacedHelpers('Cart')
 
 export default {
 	name: 'AppHeader',
@@ -27,7 +27,7 @@ export default {
 		CartIcon
 	},
 	computed: {
-		...Cart.mapGetters({
+		...mapGetters({
 			totalQuantity: 'totalQuantity'
 		})
 	}
