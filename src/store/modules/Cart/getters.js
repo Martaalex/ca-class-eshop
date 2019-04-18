@@ -2,6 +2,7 @@ export default {
 	status: state => state.status,
 	quantity: state => state.quantity,
 	products: state => state.products,
+	totalPriceWithTaxes: (state, getters) => getters.totalPrice * 1.21,
 	totalQuantity: state => {
 		const productsQuantity = Object.keys(state.quantity).map(id => state.quantity[id])
 

@@ -6,6 +6,8 @@ import {
 	faHeart as fasHeart,
 	faShoppingCart,
 	faCartPlus,
+	faPlus,
+	faMinus,
 	faChevronLeft
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -14,6 +16,8 @@ import {
 } from '@fortawesome/free-regular-svg-icons'
 
 library.add(
+	faPlus,
+	faMinus,
 	fasHeart,
 	farHeart,
 	faShoppingCart,

@@ -13,7 +13,7 @@
 			@click="$emit('click', $event)"
 		>
 			<img
-				:src="image"
+				:src="product.image"
 				:alt="product.name"
 			>
 		</div>
@@ -34,52 +34,63 @@
 				{{ product.price | currency }}
 			</h2>
 		</div>
+
 		<div class="product-box__button">
-			<BaseButton @click="$emit('addToCart', product)">
-				<FontAwesomeIcon
-					class="product-box__button-icon"
-					:icon="['fas', 'cart-plus']"
+			<Transition
+				enter-active-class="product-box__button-transition--entering"
+				enter-class="product-box__button-transition--enter-start"
+				enter-to-class="product-box__button-transition--enter-end"
+				leave-active-class="product-box__button-transition--exiting"
+				leave-to-class="product-box__button-transition--exit-end"
+				mode="out-in"
+			>
+				<BaseButton
+					v-if="!count"
+					@click="$emit('addToCart', product)"
+				>
+					<FontAwesomeIcon
+						class="product-box__button-icon"
+						:icon="['fas', 'cart-plus']"
+					/>
+					Add to cart
+				</BaseButton>
+				<BasePlusMinus
+					v-else
+					:value="count"
+					@plus="$emit('plus', product)"
+					@minus="$emit('minus', product)"
 				/>
-				Add to cart
-			</BaseButton>
+			</Transition>
 		</div>
 	</div>
 </template>
 <script>
 import BaseButton from '@/components/BaseButton'
+import BasePlusMinus from '@/components/BasePlusMinus'
 import HeartIcon from '@/components/HeartIcon'
 export default {
 	name: 'ProductBox',
 	components: {
 		BaseButton,
+		BasePlusMinus,
 		HeartIcon
-	},
-	filters: {
-		currency (value) {
-			return new Intl.NumberFormat('lt-LT',
-				{
-					style: 'currency',
-					currency: 'EUR'
-				}
-			).format(value)
-		}
 	},
 	props: {
 		product: {
 			type: Object,
-			required: true
+			required: true,
+			default: () => ({})
+		},
+		count: {
+			type: Number,
+			default: 0
 		}
 	},
 	data: () => ({
 		isLoaded: false
 	}),
-	computed: {
-		image () {
-			return `${this.product.image}?c=${this.product.id}`
-		}
-	},
 	async created () {
-		await this.loadImage(this.image)
+		await this.loadImage(this.product.image)
 		this.isLoaded = true
 	},
 	methods: {
@@ -167,15 +178,36 @@ export default {
 			margin: 0;
 			height: 45px;
 			line-height: 1.1;
-			overflow: hidden;
 		}
 
 		&__button {
-			margin-bottom: 15px;
+			margin: 15px 0;
 			padding: 0 15px;
 
 			&-icon {
 				margin-right: 7.5px;
+			}
+
+			&-transition {
+				&--entering {
+					transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1), transform .15s cubic-bezier(0.0, 0.0, 0.2, 1);
+					will-change: transform, opacity;
+				}
+
+				&--exiting {
+					transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1), transform .15s cubic-bezier(0.4, 0.0, 1, 1);
+					will-change: transform, opacity;
+				}
+
+				&--enter-start, &--exit-end {
+					opacity: 0;
+					transform: scale(0);
+				}
+
+				&--enter-end, &--exit-start {
+					opacity: 1;
+					transform: scale(1);
+				}
 			}
 		}
 	}

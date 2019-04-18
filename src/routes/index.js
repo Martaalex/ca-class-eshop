@@ -1,3 +1,4 @@
+// import Cart from '@/views/Cart'
 const Products = () => import(/* webpackChunkName: "products-view" */ '@/views/Products')
 const Product = () => import(/* webpackChunkName: "product-view" */ '@/views/Product')
 const Cart = () => import(/* webpackChunkName: "cart-view" */ '@/views/Cart')

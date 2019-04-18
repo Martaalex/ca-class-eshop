@@ -17,8 +17,11 @@
 			>
 				<ProductBox
 					:product="product"
+					:count="quantity[product.id]"
 					@favorite="updateFavorite"
 					@addToCart="addToCart"
+					@plus="increaseCount"
+					@minus="decreaseCount"
 					@click="goToProduct(product.id)"
 				/>
 			</div>
@@ -31,7 +34,7 @@ import { createNamespacedHelpers } from 'vuex'
 import { REQUESTING } from '@/store/modules/Products/status-types'
 import { FETCH_DATA } from '@/store/modules/Products/action-types'
 import { UPDATE_FAVORITE } from '@/store/modules/Products/mutation-types'
-import { ADD_TO_CART } from '@/store/modules/Cart/action-types'
+import { ADD_TO_CART, INCREASE_COUNT, DECREASE_COUNT } from '@/store/modules/Cart/action-types'
 
 import ProductBox from '@/components/ProductBox'
 import Spinner from '@/components/Spinner'
@@ -50,6 +53,9 @@ export default {
 			status: 'status',
 			products: 'products'
 		}),
+		...Cart.mapGetters({
+			quantity: 'quantity'
+		}),
 		isRequesting () {
 			return this.status === REQUESTING
 		}
@@ -59,7 +65,9 @@ export default {
 	},
 	methods: {
 		...Cart.mapActions({
-			addToCart: ADD_TO_CART
+			addToCart: ADD_TO_CART,
+			increaseCount: INCREASE_COUNT,
+			decreaseCount: DECREASE_COUNT
 		}),
 		...Products.mapActions({
 			fetchData: FETCH_DATA

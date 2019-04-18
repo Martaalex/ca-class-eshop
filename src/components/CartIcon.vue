@@ -24,12 +24,13 @@ export default {
 	},
 	computed: {
 		count () {
-			if (this.badge && this.badge < 10) {
+			if (this.badge < 10) {
 				return this.badge
 			} else if (this.badge) {
-				return '9+'
+				return '+9'
+			} else {
+				return 0
 			}
-			return 0
 		}
 	}
 }
@@ -48,15 +49,27 @@ export default {
 			justify-content: center;
 			color: white;
 			background-color: hsl(348, 100%, 61%);
-			height: 15px;
-			width: 15px;
+			height: 17px;
+			width: 17px;
 			border-radius: 100%;
-			font-size: 11px;
+			font-size: 10px;
+			animation: BadgePopIn .2s cubic-bezier(0.4, 0.0, 0.2, 1);
 		}
 
 		&:hover {
 			cursor: pointer;
 			opacity: .7;
+		}
+	}
+
+	@keyframes BadgePopIn {
+		from {
+			transform: scale(0);
+			opacity: 0;
+		}
+		to	{
+			transform: scale(1);
+			opacity: 1;
 		}
 	}
 </style>

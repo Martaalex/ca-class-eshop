@@ -8,6 +8,7 @@ export default {
 	[SET_PRODUCTS] (state, products) {
 		state.products = products.map((product, index) => {
 			product.id = index + 1
+			product.image = `${product.image}?c=${index + 1}`
 			return product
 		})
 	},
