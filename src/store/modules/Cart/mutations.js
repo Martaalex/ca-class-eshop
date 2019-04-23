@@ -3,7 +3,8 @@ import {
 	ADD_PRODUCT,
 	REMOVE_PRODUCT,
 	SET_QUANTITY,
-	SET_CODE
+	SET_CODE,
+	REMOVE_CODE
 } from './mutation-types'
 
 export default {
@@ -45,5 +46,12 @@ export default {
 	[SET_CODE] (state, { code, value }) {
 		state.discountCode = code
 		state.discountValue = value
+		sessionStorage.setItem('discountCode', code)
+	},
+
+	[REMOVE_CODE] (state) {
+		state.discountCode = null
+		state.discountValue = 0
+		sessionStorage.removeItem('discountCode')
 	}
 }

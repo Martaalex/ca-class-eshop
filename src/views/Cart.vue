@@ -45,6 +45,7 @@
 			<div class="cart__column cart__column--right">
 				<div>
 					<h2 class="cart__title"> Price details </h2>
+					<h3> {{ totalFinalPrice | currency }} </h3>
 					<div>
 						<input
 							v-model="discountInput"
@@ -84,7 +85,8 @@ export default {
 			quantity: 'quantity',
 			totalQuantity: 'totalQuantity',
 			totalPrice: 'totalPrice',
-			totalPriceWithTaxes: 'totalPriceWithTaxes'
+			totalFinalPrice: 'totalFinalPrice',
+			discountCode: 'discountCode'
 		})
 	},
 	data: () => ({
@@ -92,13 +94,19 @@ export default {
 		discountInput: null,
 		steps: ['Cart', 'Delivery', 'Payment']
 	}),
+	created () {
+		if (this.discountCode) {
+			this.discountInput = this.discountCode
+			this.handleDiscountClick()
+		}
+	},
 	methods: {
 		...mapActions({
 			increaseCount: INCREASE_COUNT,
 			decreaseCount: DECREASE_COUNT,
 			applyDiscount: APPLY_DISCOUNT
 		}),
-		async handleDiscountClick (event) {
+		async handleDiscountClick () {
 			try {
 				this.error = null
 				await this.applyDiscount(this.discountInput)

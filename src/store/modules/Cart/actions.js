@@ -10,7 +10,8 @@ import {
 	ADD_PRODUCT,
 	REMOVE_PRODUCT,
 	SET_QUANTITY,
-	SET_CODE
+	SET_CODE,
+	REMOVE_CODE
 } from './mutation-types'
 
 export default {
@@ -43,6 +44,7 @@ export default {
 	[APPLY_DISCOUNT] ({ commit }, code) {
 		return new Promise((resolve, reject) => {
 			if (code !== 'Test') {
+				commit(REMOVE_CODE)
 				reject(new Error('Discount code is invalid'))
 			} else {
 				const discount = { code, value: 20 }
