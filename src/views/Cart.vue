@@ -43,8 +43,19 @@
 				</div>
 			</div>
 			<div class="cart__column cart__column--right">
-				<h2 class="cart__title">Price details</h2>
-				{{ totalPriceWithTaxes | currency }}
+				<div>
+					<h2 class="cart__title"> Price details </h2>
+					<div>
+						<input
+							v-model="discountInput"
+							type="text"
+						>
+						<button @click="handleDiscountClick">
+							Apply
+						</button>
+					</div>
+					<small v-if="error"> {{ error }} </small>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -54,7 +65,11 @@
 import { createNamespacedHelpers } from 'vuex'
 import CartProductBox from '@/components/CartProductBox'
 import CartSteps from '@/components/CartSteps'
-import { INCREASE_COUNT, DECREASE_COUNT } from '@/store/modules/Cart/action-types'
+import {
+	INCREASE_COUNT,
+	DECREASE_COUNT,
+	APPLY_DISCOUNT
+} from '@/store/modules/Cart/action-types'
 const { mapActions, mapGetters } = createNamespacedHelpers('Cart')
 
 export default {
@@ -73,13 +88,24 @@ export default {
 		})
 	},
 	data: () => ({
+		error: null,
+		discountInput: null,
 		steps: ['Cart', 'Delivery', 'Payment']
 	}),
 	methods: {
 		...mapActions({
 			increaseCount: INCREASE_COUNT,
-			decreaseCount: DECREASE_COUNT
-		})
+			decreaseCount: DECREASE_COUNT,
+			applyDiscount: APPLY_DISCOUNT
+		}),
+		async handleDiscountClick (event) {
+			try {
+				this.error = null
+				await this.applyDiscount(this.discountInput)
+			} catch (error) {
+				this.error = error.message
+			}
+		}
 	}
 }
 </script>

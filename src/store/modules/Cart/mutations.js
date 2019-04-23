@@ -2,7 +2,8 @@ import {
 	UPDATE_STATUS,
 	ADD_PRODUCT,
 	REMOVE_PRODUCT,
-	SET_QUANTITY
+	SET_QUANTITY,
+	SET_CODE
 } from './mutation-types'
 
 export default {
@@ -39,5 +40,10 @@ export default {
 	[SET_QUANTITY] (state, quantity) {
 		state.quantity = quantity
 		sessionStorage.setItem('quantity', JSON.stringify(state.quantity))
+	},
+
+	[SET_CODE] (state, { code, value }) {
+		state.discountCode = code
+		state.discountValue = value
 	}
 }

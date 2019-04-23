@@ -2,13 +2,15 @@ import {
 	ADD_TO_CART,
 	REMOVE_FROM_CART,
 	INCREASE_COUNT,
-	DECREASE_COUNT
+	DECREASE_COUNT,
+	APPLY_DISCOUNT
 } from './action-types'
 
 import {
 	ADD_PRODUCT,
 	REMOVE_PRODUCT,
-	SET_QUANTITY
+	SET_QUANTITY,
+	SET_CODE
 } from './mutation-types'
 
 export default {
@@ -36,5 +38,17 @@ export default {
 				commit(REMOVE_PRODUCT, product)
 			}
 		}
+	},
+
+	[APPLY_DISCOUNT] ({ commit }, code) {
+		return new Promise((resolve, reject) => {
+			if (code !== 'Test') {
+				reject(new Error('Discount code is invalid'))
+			} else {
+				const discount = { code, value: 20 }
+				commit(SET_CODE, discount)
+				resolve(discount)
+			}
+		})
 	}
 }
