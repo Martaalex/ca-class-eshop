@@ -4,7 +4,9 @@ import {
 	REMOVE_PRODUCT,
 	SET_QUANTITY,
 	SET_CODE,
-	REMOVE_CODE
+	REMOVE_CODE,
+	SET_DELIVERY,
+	REMOVE_DELIVERY
 } from './mutation-types'
 
 export default {
@@ -53,5 +55,13 @@ export default {
 		state.discountCode = null
 		state.discountValue = 0
 		sessionStorage.removeItem('discountCode')
+	},
+
+	[SET_DELIVERY] (state, delivery) {
+		state.delivery = delivery
+	},
+
+	[REMOVE_DELIVERY] (state) {
+		state.delivery = {}
 	}
 }

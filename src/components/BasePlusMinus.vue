@@ -4,7 +4,7 @@
 			class="base-plus-minus__button"
 			@click="$emit('minus', value)"
 		>
-			<FontAwesomeIcon :icon="['fas', 'minus']"/>
+			<FontAwesomeIcon :icon="['fas', 'minus']" />
 		</BaseButton>
 
 		<span class="base-plus-minus__value"> {{ value }} </span>
@@ -13,7 +13,7 @@
 			class="base-plus-minus__button"
 			@click="$emit('plus', value)"
 		>
-			<FontAwesomeIcon :icon="['fas', 'plus']"/>
+			<FontAwesomeIcon :icon="['fas', 'plus']" />
 		</BaseButton>
 	</div>
 </template>

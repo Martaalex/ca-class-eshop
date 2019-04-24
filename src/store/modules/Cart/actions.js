@@ -3,7 +3,8 @@ import {
 	REMOVE_FROM_CART,
 	INCREASE_COUNT,
 	DECREASE_COUNT,
-	APPLY_DISCOUNT
+	APPLY_DISCOUNT,
+	ADD_DELIVERY
 } from './action-types'
 
 import {
@@ -11,7 +12,9 @@ import {
 	REMOVE_PRODUCT,
 	SET_QUANTITY,
 	SET_CODE,
-	REMOVE_CODE
+	REMOVE_CODE,
+	SET_DELIVERY,
+	REMOVE_DELIVERY
 } from './mutation-types'
 
 export default {
@@ -19,8 +22,12 @@ export default {
 		commit(ADD_PRODUCT, product)
 	},
 
-	[REMOVE_FROM_CART] ({ commit }, product) {
+	async [REMOVE_FROM_CART] ({ commit, state }, product) {
 		commit(REMOVE_PRODUCT, product)
+		if (state.products.length === 0) {
+			commit(REMOVE_CODE)
+			commit(REMOVE_DELIVERY)
+		}
 	},
 
 	[INCREASE_COUNT] ({ commit, state }, product) {
@@ -30,13 +37,13 @@ export default {
 		}
 	},
 
-	[DECREASE_COUNT] ({ commit, state }, product) {
+	[DECREASE_COUNT] ({ commit, state, dispatch }, product) {
 		const ID = product.id
 		if (state.quantity[ID]) {
 			if (state.quantity[ID] > 1) {
 				commit(SET_QUANTITY, { ...state.quantity, [ID]: state.quantity[ID] - 1 })
 			} else {
-				commit(REMOVE_PRODUCT, product)
+				dispatch(REMOVE_FROM_CART, product)
 			}
 		}
 	},
@@ -52,5 +59,11 @@ export default {
 				resolve(discount)
 			}
 		})
+	},
+
+	[ADD_DELIVERY] ({ state, commit }, address) {
+		if (state.products.length > 0) {
+			commit(SET_DELIVERY, { address, cost: 20 })
+		}
 	}
 }

@@ -24,6 +24,9 @@ export default {
 		if (state.discountValue) {
 			price = price - (price * (state.discountValue / 100))
 		}
+		if (state.delivery.cost) {
+			price = price + state.delivery.cost
+		}
 		return price
 	}
 }

@@ -16,46 +16,49 @@
 
 		<div class="cart__row">
 			<div class="cart__column cart__column--left">
-
-				<div
-					v-if="totalQuantity"
-					class="cart__products"
-				>
-
-					<div class="cart__products-header">
-						<h2 class="cart__title"> {{ totalQuantity }} item added </h2>
-						<h2 class="cart__title"> Total: {{ totalPrice | currency }} </h2>
-					</div>
-
-					<div class="cart__products-content">
-						<CartProductBox
-							v-for="product in products"
-							:key="product.id"
-							:product="product"
-							:count="quantity[product.id]"
-							@plus="increaseCount"
-							@minus="decreaseCount"
-						/>
-					</div>
-				</div>
-				<div v-else>
-					No products
-				</div>
+				<RouterView />
 			</div>
 			<div class="cart__column cart__column--right">
-				<div>
-					<h2 class="cart__title"> Price details </h2>
-					<h3> {{ totalFinalPrice | currency }} </h3>
-					<div>
-						<input
-							v-model="discountInput"
-							type="text"
-						>
-						<button @click="handleDiscountClick">
-							Apply
-						</button>
+				<div class="price-details">
+					<div class="price-details__header">
+						<h2 class="cart__title">
+							Price Details
+						</h2>
 					</div>
-					<small v-if="error"> {{ error }} </small>
+					<div class="price-details__content">
+						<ul class="price-details__list">
+							<li class="price-details__list-item">
+								<span class="price-details__title">Bag total</span>
+								<span class="price-details__value"> {{ totalPrice | currency }} </span>
+							</li>
+							<li class="price-details__list-item">
+								<span class="price-details__title">Estimated VAC/CST</span>
+								<span class="price-details__value"> {{ totalPriceWithTaxes - totalPrice | currency }} </span>
+							</li>
+							<li class="price-details__list-item">
+								<span class="price-details__title">Coupon Discount</span>
+								<a class="price-details__value price-details__value--link">
+									{{ discountCode ? discountCode : `+ Apply code` }}
+								</a>
+							</li>
+							<li class="price-details__list-item">
+								<span class="price-details__title">Delivery</span>
+								<RouterLink
+									:to="{ name: 'Cart:Delivery' }"
+									class="price-details__value price-details__value--link"
+								>
+									+ Add delivery
+								</RouterLink>
+							</li>
+							<li class="price-details__list-item">
+								<span class="price-details__title">Total price</span>
+								<span class="price-details__value">
+									{{ totalFinalPrice | currency }}
+								</span>
+							</li>
+						</ul>
+						<BaseButton> Place order </BaseButton>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -64,36 +67,49 @@
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
-import CartProductBox from '@/components/CartProductBox'
 import CartSteps from '@/components/CartSteps'
+import BaseButton from '@/components/BaseButton'
 import {
-	INCREASE_COUNT,
-	DECREASE_COUNT,
-	APPLY_DISCOUNT
+	APPLY_DISCOUNT,
+	ADD_DELIVERY
 } from '@/store/modules/Cart/action-types'
-const { mapActions, mapGetters } = createNamespacedHelpers('Cart')
+import {
+	REMOVE_DELIVERY
+} from '@/store/modules/Cart/mutation-types'
+const { mapActions, mapMutations, mapGetters } = createNamespacedHelpers('Cart')
 
 export default {
 	name: 'Cart',
 	components: {
-		CartProductBox,
-		CartSteps
-	},
-	computed: {
-		...mapGetters({
-			products: 'products',
-			quantity: 'quantity',
-			totalQuantity: 'totalQuantity',
-			totalPrice: 'totalPrice',
-			totalFinalPrice: 'totalFinalPrice',
-			discountCode: 'discountCode'
-		})
+		CartSteps,
+		BaseButton
 	},
 	data: () => ({
 		error: null,
 		discountInput: null,
+		deliveryAddress: null,
+		withDelivery: false,
 		steps: ['Cart', 'Delivery', 'Payment']
 	}),
+	computed: {
+		...mapGetters({
+			totalPrice: 'totalPrice',
+			totalPriceWithTaxes: 'totalPriceWithTaxes',
+			totalFinalPrice: 'totalFinalPrice',
+			discountCode: 'discountCode'
+		})
+	},
+	watch: {
+		withDelivery: {
+			handler (checked) {
+				if (checked && this.deliveryAddress) {
+					this.addDelivery(this.deliveryAddress)
+				} else {
+					this.removeDelivery()
+				}
+			}
+		}
+	},
 	created () {
 		if (this.discountCode) {
 			this.discountInput = this.discountCode
@@ -102,9 +118,11 @@ export default {
 	},
 	methods: {
 		...mapActions({
-			increaseCount: INCREASE_COUNT,
-			decreaseCount: DECREASE_COUNT,
-			applyDiscount: APPLY_DISCOUNT
+			applyDiscount: APPLY_DISCOUNT,
+			addDelivery: ADD_DELIVERY
+		}),
+		...mapMutations({
+			removeDelivery: REMOVE_DELIVERY
 		}),
 		async handleDiscountClick () {
 			try {
@@ -113,6 +131,9 @@ export default {
 			} catch (error) {
 				this.error = error.message
 			}
+		},
+		handleDeliveryClick () {
+			this.addDelivery(this.deliveryAddress)
 		}
 	}
 }
@@ -169,6 +190,44 @@ export default {
 			&-header {
 				display: flex;
 				justify-content: space-between;
+			}
+		}
+	}
+	.price-details {
+		width: 100%;
+
+		&__content {
+			font-size: 14px;
+			margin-top: 15px;
+		}
+
+		&__list {
+			list-style: none;
+			padding: 0;
+		}
+
+		&__list-item {
+			display: flex;
+			justify-content: space-between;
+			padding-bottom: 15px;
+		}
+
+		&__title {
+			color: rgb(60, 69, 82);
+		}
+
+		&__value {
+			color: rgb(41, 49, 61);
+			font-weight: bold;
+			font-size: 16px;
+
+			&--link {
+				color: hsl(152, 56%, 50%);
+
+				&:hover {
+					opacity: .7;
+					cursor: pointer
+				}
 			}
 		}
 	}
