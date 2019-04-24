@@ -70,13 +70,9 @@ import { createNamespacedHelpers } from 'vuex'
 import CartSteps from '@/components/CartSteps'
 import BaseButton from '@/components/BaseButton'
 import {
-	APPLY_DISCOUNT,
-	ADD_DELIVERY
+	APPLY_DISCOUNT
 } from '@/store/modules/Cart/action-types'
-import {
-	REMOVE_DELIVERY
-} from '@/store/modules/Cart/mutation-types'
-const { mapActions, mapMutations, mapGetters } = createNamespacedHelpers('Cart')
+const { mapActions, mapGetters } = createNamespacedHelpers('Cart')
 
 export default {
 	name: 'Cart',
@@ -87,8 +83,6 @@ export default {
 	data: () => ({
 		error: null,
 		discountInput: null,
-		deliveryAddress: null,
-		withDelivery: false,
 		steps: ['Cart', 'Delivery', 'Payment']
 	}),
 	computed: {
@@ -99,17 +93,6 @@ export default {
 			discountCode: 'discountCode'
 		})
 	},
-	watch: {
-		withDelivery: {
-			handler (checked) {
-				if (checked && this.deliveryAddress) {
-					this.addDelivery(this.deliveryAddress)
-				} else {
-					this.removeDelivery()
-				}
-			}
-		}
-	},
 	created () {
 		if (this.discountCode) {
 			this.discountInput = this.discountCode
@@ -118,11 +101,7 @@ export default {
 	},
 	methods: {
 		...mapActions({
-			applyDiscount: APPLY_DISCOUNT,
-			addDelivery: ADD_DELIVERY
-		}),
-		...mapMutations({
-			removeDelivery: REMOVE_DELIVERY
+			applyDiscount: APPLY_DISCOUNT
 		}),
 		async handleDiscountClick () {
 			try {
@@ -131,9 +110,6 @@ export default {
 			} catch (error) {
 				this.error = error.message
 			}
-		},
-		handleDeliveryClick () {
-			this.addDelivery(this.deliveryAddress)
 		}
 	}
 }
